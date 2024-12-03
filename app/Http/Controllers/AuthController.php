@@ -37,34 +37,45 @@ class AuthController extends Controller
     {
         return view('auth.login');
     }
+
     public function login(Request $request)
     {
+        // Validasi inputan login
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
     
+        // Cek kredensial login
         if (Auth::attempt($credentials)) {
-            Log::info('Login successful for user: ' . Auth::user()->email);
+            // Regenerasi session setelah login
             $request->session()->regenerate();
+    
+            // Cek role user yang login
             $role = Auth::user()->role->nama_role;
+            Log::info('Login successful for user: ' . Auth::user()->email);
             Log::info('Role: ' . $role);
     
+            // Redirect berdasarkan role
             if ($role === 'Admin') {
-                return redirect('/layout');
+                return redirect()->route('main');
             } elseif ($role === 'Penjual') {
-                return redirect('/layout');
+                return redirect()->route('main');
             } elseif ($role === 'Pembeli') {
-                return redirect('/layout');
+                return redirect()->route('main');
             }
         }
     
+        // Jika login gagal, kembali dengan error
         Log::warning('Login failed for email: ' . $request->email);
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+        return back()->withInput()->withErrors([
+            'email' => 'The provided credentials do not match our records. Please check your email and password.',
         ]);
     }
     
+    public function layout(){
+        return view('layout.main');
+    }
 
     public function logout(Request $request)
     {

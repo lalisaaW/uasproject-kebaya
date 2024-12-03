@@ -9,10 +9,8 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/layout', function () {
-        dd(Auth::check(), Auth::user());
-        return view('layout.main');
-    })->name('main');
+    Route::get('/layout', [AuthController::class, 'layout'])->name('main');
+    Route::post('/layout', [AuthController::class, 'layout'])->name('main');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
