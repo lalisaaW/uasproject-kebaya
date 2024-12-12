@@ -9,9 +9,17 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
+    public function index(){
+        // dd(session()->all());
+        return view('layouts.main');
+
+    }
+
+
     Public function FormRegis(){
         return view('auth.register');
     }
+
     Public function Register(Request $request){
         // dd($request->all());
         $request->validate([
@@ -43,16 +51,23 @@ class AuthController extends Controller
         // Validasi inputan login
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required|min:8',
         ]);
+        $user = User::where('email', $request->email)->first();
+
+
+        // if (Auth::attempt($credentials)) {
+        //     // Regenerasi session setelah login
+        //     $request->session()->regenerate();
+
     
-        // Cek kredensial login
-        if (Auth::attempt($credentials)) {
-            // Regenerasi session setelah login
-            $request->session()->regenerate();
-    
+        if ($user && Hash::check($request->password, $user->password)) {
+            // Jika password valid, lakukan login
+            Auth::login($user);
+            $request->session()->regenerate(); 
             // Cek role user yang login
             $role = Auth::user()->role->nama_role;
+            // dd($role);
             Log::info('Login successful for user: ' . Auth::user()->email);
             Log::info('Role: ' . $role);
     
@@ -64,19 +79,15 @@ class AuthController extends Controller
             } elseif ($role === 'Pembeli') {
                 return redirect()->route('main');
             }
+        } else {
+            // Jika login gagal, kembali dengan error
+            Log::warning('Login failed for email: ' . $request->email);
+            return back()->withInput()->withErrors([
+                'email' => 'The provided credentials do not match our records. Please check your email and password.',
+            ]);
         }
-    
-        // Jika login gagal, kembali dengan error
-        Log::warning('Login failed for email: ' . $request->email);
-        return back()->withInput()->withErrors([
-            'email' => 'The provided credentials do not match our records. Please check your email and password.',
-        ]);
     }
     
-    public function layout(){
-        return view('layout.main');
-    }
-
     public function logout(Request $request)
     {
         Auth::logout();
