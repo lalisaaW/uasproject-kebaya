@@ -49,11 +49,11 @@
             </div>
         </div>
         <!-- partial:partials/_navbar.html -->
-        @include('layout.navbar')
+        @include('layouts.navbar')
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_sidebar.html -->
-            @include('layout.sidebar')
+            @include('layouts.sidebar')
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -66,6 +66,12 @@
                                         <span class="text-primary">3 unread alerts!</span>
                                     </h6>
                                 </div>
+                                @if(Auth::check())
+                                    <p>Welcome, {{ Auth::user()->nama }} (Role: {{ Auth::user()->role->nama_role }})</p>
+                                @else
+                                    <p>User not logged in.</p>
+                                @endif
+
                                 <div class="col-12 col-xl-4">
                                     <div class="justify-content-end d-flex">
                                         <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
@@ -867,7 +873,7 @@
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
-               @include('layout.footer')
+               @include('layouts.footer')
                 <!-- partial -->
             </div>
             <!-- main-panel ends -->
