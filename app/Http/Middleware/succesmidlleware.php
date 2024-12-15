@@ -16,10 +16,11 @@ class succesmidlleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() == true) {
-            return redirect('/layouts');
+        if (Auth::check() && $request->is('login', 'register')) {
+            return redirect('/layouts'); // Ganti sesuai route dashboard utama kamu
         }
-       
+
+        // Lanjutkan ke request berikutnya
         return $next($request);
     }
 }
