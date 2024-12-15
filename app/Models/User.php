@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\role;
 
 class User extends Authenticatable
 {
@@ -17,10 +18,14 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table = 'users';
+    protected $Primarykey = 'user_id' ;
     protected $fillable = [
-        'name',
+        'role_id',
+        'nama',
         'email',
         'password',
+        'no_hp',
     ];
 
     /**
@@ -45,4 +50,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function role()
+    {
+        return $this->belongsTo(role::class, 'role_id', 'role_id');
+    }
+    
 }
