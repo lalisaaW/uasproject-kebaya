@@ -34,15 +34,20 @@ class RentalController extends Controller
         if (!Auth::user()->canRentKebaya()) {
             abort(403, 'You are not authorized to rent kebayas.');
         }
-
+    
         $validatedData = $request->validate([
             'TANGGAL_MULAI' => 'required|date|after_or_equal:today',
             'TANGGAL_SELESAI' => 'required|date|after:TANGGAL_MULAI',
         ]);
-
+    
+        // Custom validation to ensure TANGGAL_SELESAI is after TANGGAL_MULAI
+        if (strtotime($validatedData['TANGGAL_SELESAI']) <= strtotime($validatedData['TANGGAL_MULAI'])) {
+            return back()->withErrors(['TANGGAL_SELESAI' => 'The end date must be after the start date.'])->withInput();
+        }
+    
         $days = (new \DateTime($validatedData['TANGGAL_MULAI']))->diff(new \DateTime($validatedData['TANGGAL_SELESAI']))->days + 1;
         $totalHarga = $kebaya->HARGA_SEWA * $days;
-
+    
         $rental = new Rental([
             'ID_KEBAYA' => $kebaya->ID_KEBAYA,
             'ID_USER' => Auth::id(),
@@ -54,9 +59,9 @@ class RentalController extends Controller
             'CREATE_DATE' => now(),
             'DELETE_MARK' => 'N',
         ]);
-
+    
         $rental->save();
-
+    
         return redirect()->route('rentals.index')->with('success', 'Rental request submitted successfully.');
     }
 
@@ -76,20 +81,26 @@ class RentalController extends Controller
         return view('rentals.edit', compact('rental'));
     }
 
+
     public function update(Request $request, Rental $rental)
     {
         if ($rental->ID_USER !== Auth::id() || $rental->STATUS !== 'pending') {
             abort(403, 'You are not authorized to edit this rental.');
         }
-
+    
         $validatedData = $request->validate([
             'TANGGAL_MULAI' => 'required|date|after_or_equal:today',
             'TANGGAL_SELESAI' => 'required|date|after:TANGGAL_MULAI',
         ]);
-
+    
+        // Custom validation to ensure TANGGAL_SELESAI is after TANGGAL_MULAI
+        if (strtotime($validatedData['TANGGAL_SELESAI']) <= strtotime($validatedData['TANGGAL_MULAI'])) {
+            return back()->withErrors(['TANGGAL_SELESAI' => 'The end date must be after the start date.'])->withInput();
+        }
+    
         $days = (new \DateTime($validatedData['TANGGAL_MULAI']))->diff(new \DateTime($validatedData['TANGGAL_SELESAI']))->days + 1;
         $totalHarga = $rental->kebaya->HARGA_SEWA * $days;
-
+    
         $rental->update([
             'TANGGAL_MULAI' => $validatedData['TANGGAL_MULAI'],
             'TANGGAL_SELESAI' => $validatedData['TANGGAL_SELESAI'],
@@ -97,7 +108,7 @@ class RentalController extends Controller
             'UPDATE_BY' => Auth::user()->username,
             'UPDATE_DATE' => now(),
         ]);
-
+    
         return redirect()->route('rentals.index')->with('success', 'Rental updated successfully.');
     }
 
