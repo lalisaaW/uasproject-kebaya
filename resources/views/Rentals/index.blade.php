@@ -3,6 +3,11 @@
 @section('content')
 <div class="container">
     <h1>My Rentals</h1>
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <table class="table">
         <thead>
             <tr>
@@ -25,10 +30,11 @@
                     <td>
                         <a href="{{ route('rentals.show', $rental) }}" class="btn btn-sm btn-info">View</a>
                         @if($rental->STATUS === 'pending')
-                            <form action="{{ route('rentals.cancel', $rental) }}" method="POST" class="d-inline">
+                            <a href="{{ route('rentals.edit', $rental) }}" class="btn btn-sm btn-secondary">Edit</a>
+                            <form action="{{ route('rentals.destroy', $rental) }}" method="POST" class="d-inline">
                                 @csrf
-                                @method('PATCH')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Cancel</button>
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this rental?')">Cancel</button>
                             </form>
                         @endif
                     </td>

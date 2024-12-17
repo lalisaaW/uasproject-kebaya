@@ -74,19 +74,32 @@ class User extends Authenticatable
         return $this->hasMany(Kebaya::class, 'ID_USER', 'ID_USER');
     }
 
-    public function rentals()
-    {
-        return $this->hasMany(Rental::class, 'ID_USER', 'ID_USER');
-    }
+        // public function rentals()
+        // {
+        //     return $this->hasMany(Rental::class, 'ID_USER', 'ID_USER');
+        // }
 
     public function canUploadKebaya()
     {
         return $this->ID_JENIS_USER == 3;
     }
 
+    // public function canRentKebaya()
+    // {
+    //     return $this->ID_JENIS_USER == 2;
+    // }
     public function canRentKebaya()
     {
+        // Assuming ID_JENIS_USER 2 is for regular users who can rent
         return $this->ID_JENIS_USER == 2;
+    }
+
+    /**
+     * Get the rentals for the user.
+     */
+    public function rentals()
+    {
+        return $this->hasMany(Rental::class, 'ID_USER', 'ID_USER');
     }
 
 }

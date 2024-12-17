@@ -54,7 +54,15 @@ class KebayaController extends Controller
         $validatedData['CREATE_DATE'] = now();
         $validatedData['DELETE_MARK'] = 'N';
 
-        Kebaya::create($validatedData);
+        $kebaya = Kebaya::create($validatedData);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kebaya added successfully.',
+                'kebaya' => $kebaya
+            ]);
+        }
 
         return redirect()->route('kebayas.index')->with('success', 'Kebaya added successfully.');
     }
@@ -152,4 +160,6 @@ class KebayaController extends Controller
     }
 
 }
+
+
 
