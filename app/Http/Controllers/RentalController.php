@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
 
-
 class RentalController extends Controller
 {
     public function __construct()
@@ -16,15 +15,15 @@ class RentalController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $rentals = Rental::where('ID_USER', $request->user()->id)->get();
+        $rentals = Rental::where('ID_USER', Auth::id())->get();
         return view('rentals.index', compact('rentals'));
     }
 
-    public function create(Request $request, Kebaya $kebaya)
+    public function create(Kebaya $kebaya)
     {
-        if (!$request->user()->canRentKebaya()) {
+        if (!Auth::user()->canRentKebaya()) {
             abort(403, 'You are not authorized to rent kebayas.');
         }
         return view('rentals.create', compact('kebaya'));
@@ -32,7 +31,7 @@ class RentalController extends Controller
 
     public function store(Request $request, Kebaya $kebaya)
     {
-        if (!$request->user()->canRentKebaya()) {
+        if (!Auth::user()->canRentKebaya()) {
             abort(403, 'You are not authorized to rent kebayas.');
         }
 
@@ -46,12 +45,12 @@ class RentalController extends Controller
 
         $rental = new Rental([
             'ID_KEBAYA' => $kebaya->ID_KEBAYA,
-            'ID_USER' => $request->user()->id,
+            'ID_USER' => Auth::id(),
             'TANGGAL_MULAI' => $validatedData['TANGGAL_MULAI'],
             'TANGGAL_SELESAI' => $validatedData['TANGGAL_SELESAI'],
             'TOTAL_HARGA' => $totalHarga,
             'STATUS' => 'pending',
-            'CREATE_BY' => $request->user()->username,
+            'CREATE_BY' => Auth::user()->username,
             'CREATE_DATE' => now(),
             'DELETE_MARK' => 'N',
         ]);
@@ -61,27 +60,67 @@ class RentalController extends Controller
         return redirect()->route('rentals.index')->with('success', 'Rental request submitted successfully.');
     }
 
-    public function show(Request $request, Rental $rental)
+    public function show(Rental $rental)
     {
-        if ($rental->ID_USER !== $request->user()->id) {
+        if ($rental->ID_USER !== Auth::id()) {
             abort(403, 'You are not authorized to view this rental.');
         }
         return view('rentals.show', compact('rental'));
     }
 
-    public function cancel(Request $request, Rental $rental)
+    public function edit(Rental $rental)
     {
-        if ($rental->ID_USER !== $request->user()->id || $rental->STATUS !== 'pending') {
+        if ($rental->ID_USER !== Auth::id() || $rental->STATUS !== 'pending') {
+            abort(403, 'You are not authorized to edit this rental.');
+        }
+        return view('rentals.edit', compact('rental'));
+    }
+
+    public function update(Request $request, Rental $rental)
+    {
+        if ($rental->ID_USER !== Auth::id() || $rental->STATUS !== 'pending') {
+            abort(403, 'You are not authorized to edit this rental.');
+        }
+
+        $validatedData = $request->validate([
+            'TANGGAL_MULAI' => 'required|date|after_or_equal:today',
+            'TANGGAL_SELESAI' => 'required|date|after:TANGGAL_MULAI',
+        ]);
+
+        $days = (new \DateTime($validatedData['TANGGAL_MULAI']))->diff(new \DateTime($validatedData['TANGGAL_SELESAI']))->days + 1;
+        $totalHarga = $rental->kebaya->HARGA_SEWA * $days;
+
+        $rental->update([
+            'TANGGAL_MULAI' => $validatedData['TANGGAL_MULAI'],
+            'TANGGAL_SELESAI' => $validatedData['TANGGAL_SELESAI'],
+            'TOTAL_HARGA' => $totalHarga,
+            'UPDATE_BY' => Auth::user()->username,
+            'UPDATE_DATE' => now(),
+        ]);
+
+        return redirect()->route('rentals.index')->with('success', 'Rental updated successfully.');
+    }
+
+    public function destroy(Rental $rental)
+    {
+        if ($rental->ID_USER !== Auth::id() || $rental->STATUS !== 'pending') {
             abort(403, 'You are not authorized to cancel this rental.');
         }
 
         $rental->update([
             'STATUS' => 'cancelled',
-            'UPDATE_BY' => $request->user()->username,
+            'UPDATE_BY' => Auth::user()->username,
             'UPDATE_DATE' => now(),
         ]);
 
         return redirect()->route('rentals.index')->with('success', 'Rental cancelled successfully.');
     }
-}
 
+    public function rent(Kebaya $kebaya)
+    {
+        if (!Auth::user()->canRentKebaya()) {
+            abort(403, 'You are not authorized to rent kebayas.');
+        }
+        return view('rentals.rent', compact('kebaya'));
+    }
+}

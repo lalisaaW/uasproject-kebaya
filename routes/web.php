@@ -14,6 +14,7 @@ use App\Http\Middleware\gagalMiddleware;
 use App\Http\Middleware\MenuMiddleware;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\KebayaController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Auth;
 
 Route::middleware(MenuMiddleware::class)->group(function () {
@@ -74,11 +75,18 @@ Route::middleware(MenuMiddleware::class)->group(function () {
         // Menu routes
         Route::resource('menus', MenuController::class);
         Route::resource('kebayas', KebayaController::class);
-        Route::get('rentals', [RentalController::class, 'index'])->name('rentals.index');
-        Route::get('rentals/create/{kebaya}', [RentalController::class, 'create'])->name('rentals.create');
-        Route::post('rentals/{kebaya}', [RentalController::class, 'store'])->name('rentals.store');
-        Route::get('rentals/{rental}', [RentalController::class, 'show'])->name('rentals.show');
-        Route::patch('rentals/{rental}/cancel', [RentalController::class, 'cancel'])->name('rentals.cancel');
+
+        // Rental routes
+        Route::resource('rentals', RentalController::class);
+        Route::get('kebayas/{kebaya}/rent', [RentalController::class, 'rent'])->name('kebayas.rent');
+        Route::post('kebayas/{kebaya}/rent', [RentalController::class, 'store'])->name('kebayas.store');
+    
+        // Cart routes
+        Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+        Route::post('/cart/add/{kebaya}', [CartController::class, 'add'])->name('cart.add');
+        Route::delete('/cart/remove/{kebaya}', [CartController::class, 'remove'])->name('cart.remove');
+        Route::patch('/cart/update', [CartController::class, 'update'])->name('cart.update');
+        Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     });
 });
 

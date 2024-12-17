@@ -38,3 +38,39 @@
 </div>
 @endsection
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#createKebayaModal form').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    alert(response.message);
+                    $('#createKebayaModal').modal('hide');
+                    location.reload(); // Reload the page to show the new kebaya
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function(xhr) {
+                var errors = xhr.responseJSON.errors;
+                var errorMessage = '';
+                for (var error in errors) {
+                    errorMessage += errors[error][0] + '\n';
+                }
+                alert('Error: ' + errorMessage);
+            }
+        });
+    });
+});
+</script>
+
