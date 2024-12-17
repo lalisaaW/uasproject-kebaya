@@ -18,14 +18,17 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $table = 'users';
-    protected $Primarykey = 'user_id' ;
+    protected $table ='users';
+    protected $primaryKey ='ID_USER';
+    protected $keyType = 'int';
     protected $fillable = [
-        'role_id',
-        'nama',
+        'name',
+        'username',
         'email',
         'password',
-        'no_hp',
+        'wa',
+        'ID_JENIS_USER',
+        'STATUS_USER',
     ];
 
     /**
@@ -50,10 +53,41 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function role()
+
+    public function jenisUser()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'role_id');
+        return $this->belongsTo(JenisUser::class, 'ID_JENIS_USER', 'ID_JENIS_USER');
     }
-    
-    
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class, 'MENU_ID', 'MENU_ID');
+    }
+
+    public function settingMenus()
+    {
+        return $this->hasMany(SettingMenu::class, 'ID_JENIS_USER', 'ID_JENIS_USER'); // Assuming 'id' is the user's identifier
+    }
+
+    public function ownedKebayas()
+    {
+        return $this->hasMany(Kebaya::class, 'ID_USER', 'ID_USER');
+    }
+
+    public function rentals()
+    {
+        return $this->hasMany(Rental::class, 'ID_USER', 'ID_USER');
+    }
+
+    public function canUploadKebaya()
+    {
+        return $this->ID_JENIS_USER == 3;
+    }
+
+    public function canRentKebaya()
+    {
+        return $this->ID_JENIS_USER == 2;
+    }
+
 }
+    

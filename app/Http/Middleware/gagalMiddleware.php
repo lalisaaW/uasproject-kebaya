@@ -4,10 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
-class succesmidlleware
+class gagalMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,11 +16,9 @@ class succesmidlleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && $request->is('login', 'register')) {
-            return redirect('/layouts'); // Ganti sesuai route dashboard utama kamu
+        if (Auth::check() == false) {
+            return redirect('/login');
         }
-
-        // Lanjutkan ke request berikutnya
         return $next($request);
     }
 }

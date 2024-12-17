@@ -15,7 +15,6 @@ class AuthController extends Controller
 
     }
 
-
     Public function FormRegis(){
         return view('auth.register');
     }
@@ -56,9 +55,9 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
 
-        // if (Auth::attempt($credentials)) {
-        //     // Regenerasi session setelah login
-        //     $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
+            // Regenerasi session setelah login
+            $request->session()->regenerate();
 
     
         if ($user && Hash::check($request->password, $user->password)) {
@@ -87,6 +86,7 @@ class AuthController extends Controller
             ]);
         }
     }
+}
     
     public function logout(Request $request)
     {

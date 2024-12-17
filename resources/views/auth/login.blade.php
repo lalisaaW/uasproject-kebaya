@@ -38,8 +38,8 @@
                             <form action="{{ route('login') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-lg" name="email"
-                                        placeholder="Email" autocomplete="off" >
+                                    <input type="text" class="form-control form-control-lg" name="username"
+                                        placeholder="Username" autocomplete="off" required>
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control form-control-lg" name="password"
@@ -53,7 +53,7 @@
                                 </div>
                             </form>
                             <div class="text-center mt-4 font-weight-light">
-                                Belum punya akun? <a href="/register" class="text-primary">Register</a>
+                                Don't have an account? <a href="{{ route('register') }}" class="text-primary">Register</a>
                             </div>
                         </div>
                     </div>
@@ -71,3 +71,4 @@
 </body>
 
 </html>
+

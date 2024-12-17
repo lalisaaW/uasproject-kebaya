@@ -5,43 +5,38 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Menu extends Model
+class menu extends Model
 {
     use HasFactory;
 
-    protected $table = 'menus'; // Nama tabel
-    protected $primaryKey = 'menu_id';  
-    public $timestamps = true;
+    protected $table = 'menus';
+    protected $primaryKey = 'MENU_ID';  
+    public $timestamps = false;
     public $incrementing = true;  
 
     protected $fillable = [
-        'menu_name',
-        'menu_link',
-        'menu_icon',
-        'create_by',
-        'create_date',
-        'delete_mark',
-        'update_by',
-        'update_date',
+        'MENU_NAME',
+        'MENU_LINK',
+        'MENU_ICON',
+        'CREATE_BY',
+        'CREATE_DATE',
+        'DELETE_MARK',
+        'UPDATE_BY',
+        'UPDATE_DATE',
     ];
     
     public function parent()
     {
-        return $this->belongsTo(Menu::class, 'parent_id', 'menu_id');
+        return $this->belongsTo(Menu::class, 'PARENT_ID', 'MENU_ID');
     }
 
     public function children()
     {
-        return $this->hasMany(Menu::class, 'parent_id', 'menu_id');
+        return $this->hasMany(Menu::class, 'PARENT_ID', 'MENU_ID');
     }
 
-    public function setting_menus()
+    public function settingMenus()
     {
-        return $this->hasMany(setmenu::class, 'menu_id', 'menu_id');
+        return $this->hasMany(SettingMenu::class, 'MENU_ID', 'MENU_ID');
     }
-    public function getRouteKeyName()
-    {
-        return 'menu_id'; // Primary key di database
-    }
-
 }
