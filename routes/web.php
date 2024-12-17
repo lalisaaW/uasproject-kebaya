@@ -32,3 +32,7 @@ Route::middleware('guest')->group(function () {
         return view('welcome');
     });
 });
+
+Route::get('/', function () {
+    return view('userpage.index');
+})->name('userpage');

@@ -27,11 +27,10 @@
                                 <img src="{{ asset('assets/images/logo.svg') }}" alt="logo">
                             </div>
 
-                            <h4>Login & Register</h4>
+                            <h4>Register</h4>
 
                             <form action="{{ route('register') }}" method="POST" class="mt-4">
                                 @csrf
-                                <h4>Register Form</h4>
                             
                                 <!-- Dropdown untuk memilih role -->
                                 <div class="form-group">
