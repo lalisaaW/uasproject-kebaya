@@ -2,6 +2,12 @@
     <ul class="nav">
         <div class="sb-sidenav-menu">
             <div class="nav">
+                <!-- Katalog menu item for all users -->
+                <a class="nav-link" href="{{ route('kebayas.landing') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                    <span class="menu-title">Katalog</span>
+                </a>
+
                 @if(Auth::user()->ID_JENIS_USER == 1)
                     <!-- Admin Menu -->
                     <a class="nav-link" href="{{ route('main') }}">
@@ -13,12 +19,22 @@
                         <span class="menu-title">Menu Settings</span>
                     </a>
                     <a class="nav-link" href="{{ route('users.index') }}">
-                        <div class="sb-nav-link-icon"><i class="icon-grid menu-icon"></i></div>
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                         <span class="menu-title">User</span>
                     </a>
                     <a class="nav-link" href="{{ route('menus.index') }}">
-                        <div class="sb-nav-link-icon"><i class="icon-grid menu-icon"></i></div>
+                        <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
                         <span class="menu-title">Menu</span>
+                    </a>
+                    <!-- Admin Kebaya Management -->
+                    <a class="nav-link" href="{{ route('kebayas.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tshirt"></i></div>
+                        <span class="menu-title">Manage Kebayas</span>
+                    </a>
+                    <!-- Admin Rental Management -->
+                    <a class="nav-link" href="{{ route('rentals.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <span class="menu-title">Manage Rentals</span>
                     </a>
                 @else
                     <!-- User Menu - Dynamic Menus -->
@@ -30,6 +46,19 @@
                             </a>
                         @endforeach
                     </div>
+                    <!-- User Kebaya and Rental Management -->
+                    @if(Auth::user()->canUploadKebaya())
+                        <a class="nav-link" href="{{ route('kebayas.index') }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tshirt"></i></div>
+                            <span class="menu-title">My Kebayas</span>
+                        </a>
+                    @endif
+                    @if(Auth::user()->canRentKebaya())
+                        <a class="nav-link" href="{{ route('rentals.index') }}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <span class="menu-title">My Rentals</span>
+                        </a>
+                    @endif
                 @endif
             </div>
         </div>
@@ -138,3 +167,4 @@
     });
 </script>
 @endpush
+

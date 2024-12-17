@@ -68,5 +68,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(SettingMenu::class, 'ID_JENIS_USER', 'ID_JENIS_USER'); // Assuming 'id' is the user's identifier
     }
+
+    public function ownedKebayas()
+    {
+        return $this->hasMany(Kebaya::class, 'ID_USER', 'ID_USER');
+    }
+
+    public function rentals()
+    {
+        return $this->hasMany(Rental::class, 'ID_USER', 'ID_USER');
+    }
+
+    public function canUploadKebaya()
+    {
+        return $this->ID_JENIS_USER == 3;
+    }
+
+    public function canRentKebaya()
+    {
+        return $this->ID_JENIS_USER == 2;
+    }
+
 }
     

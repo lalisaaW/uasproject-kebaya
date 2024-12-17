@@ -12,10 +12,14 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\BerhasilMiddleware;
 use App\Http\Middleware\gagalMiddleware;
 use App\Http\Middleware\MenuMiddleware;
+use App\Http\Controllers\RentalController;
+use App\Http\Controllers\KebayaController;
 use Illuminate\Support\Facades\Auth;
 
 Route::middleware(MenuMiddleware::class)->group(function () {
     // Routes that don't require authentication
+    Route::get('/', [KebayaController::class, 'landingPage'])->name('kebayas.landing');
+
     Route::middleware(BerhasilMiddleware::class)->group(function () {
         Route::get('/login', [ControllersLoginController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [ControllersLoginController::class, 'login']);
@@ -33,7 +37,7 @@ Route::middleware(MenuMiddleware::class)->group(function () {
         })->name('main');  // Menetapkan nama route sebagai 'main'
 
         // Main route yang mengecek apakah user sudah login
-        Route::get('/', function () {
+        Route::get('/dashboard', function () {
             if (Auth::check()) {
                 $user = Auth::user();
                 if ($user && $user->jenisUser) {
@@ -49,12 +53,12 @@ Route::middleware(MenuMiddleware::class)->group(function () {
         Route::post('/logout', [ControllersLoginController::class, 'logout'])->name('logout');
 
         // Routes for setting menus
-        Route::get('/', [SettingMenuController::class, 'index'])->name('setmenu.index');
-        Route::post('/', [SettingMenuController::class, 'store'])->name('setmenu.store');
-        Route::get('/{menu}/edit', [SettingMenuController::class, 'edit'])->name('setmenu.edit');
-        Route::put('/{menu}', [SettingMenuController::class, 'update'])->name('setmenu.update');
-        Route::delete('/{menu}', [SettingMenuController::class, 'destroy'])->name('setmenu.destroy');
-        
+        Route::get('/setmenu', [SettingMenuController::class, 'index'])->name('setmenu.index');
+        Route::post('/setmenu', [SettingMenuController::class, 'store'])->name('setmenu.store');
+        Route::get('/setmenu/{menu}/edit', [SettingMenuController::class, 'edit'])->name('setmenu.edit');
+        Route::put('/setmenu/{menu}', [SettingMenuController::class, 'update'])->name('setmenu.update');
+        Route::delete('/setmenu/{menu}', [SettingMenuController::class, 'destroy'])->name('setmenu.destroy');
+
         Route::middleware(['auth', 'admin'])->group(function () {
             Route::get('/menu-settings', [SettingMenuController::class, 'index'])->name('menu_settings.index');
             Route::get('/menu-settings/{id_jenis_user}/edit', [SettingMenuController::class, 'edit'])->name('menu_settings.edit');
@@ -62,7 +66,6 @@ Route::middleware(MenuMiddleware::class)->group(function () {
         });
         
         Route::get('/approved-menus', [SettingMenuController::class, 'getApprovedMenus'])->name('menu_settings.approved_menus');
-        
 
         // User routes
         Route::resource('users', UserController::class);
@@ -70,5 +73,12 @@ Route::middleware(MenuMiddleware::class)->group(function () {
 
         // Menu routes
         Route::resource('menus', MenuController::class);
+        Route::resource('kebayas', KebayaController::class);
+        Route::get('rentals', [RentalController::class, 'index'])->name('rentals.index');
+        Route::get('rentals/create/{kebaya}', [RentalController::class, 'create'])->name('rentals.create');
+        Route::post('rentals/{kebaya}', [RentalController::class, 'store'])->name('rentals.store');
+        Route::get('rentals/{rental}', [RentalController::class, 'show'])->name('rentals.show');
+        Route::patch('rentals/{rental}/cancel', [RentalController::class, 'cancel'])->name('rentals.cancel');
     });
 });
+
