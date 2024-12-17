@@ -7,7 +7,6 @@ use App\Models\Rental;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
-
 class KebayaController extends Controller
 {
     public function __construct()
@@ -54,15 +53,7 @@ class KebayaController extends Controller
         $validatedData['CREATE_DATE'] = now();
         $validatedData['DELETE_MARK'] = 'N';
 
-        $kebaya = Kebaya::create($validatedData);
-
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Kebaya added successfully.',
-                'kebaya' => $kebaya
-            ]);
-        }
+        Kebaya::create($validatedData);
 
         return redirect()->route('kebayas.index')->with('success', 'Kebaya added successfully.');
     }
@@ -158,8 +149,4 @@ class KebayaController extends Controller
 
         return redirect()->route('kebayas.landing')->with('success', 'Rental request submitted successfully.');
     }
-
 }
-
-
-

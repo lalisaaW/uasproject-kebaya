@@ -16,6 +16,17 @@
         </div>
     @endif
 
+    {{-- Display validation errors --}}
+    @if ($errors->any())
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach($kebayas as $kebaya)
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
@@ -36,7 +47,7 @@
                     <p class="text-lg font-bold mb-4">Rp {{ number_format($kebaya->HARGA_SEWA, 0, ',', '.') }} / day</p>
                     
                     @if(Auth::check() && Auth::user()->canRentKebaya())
-                        <form action="{{ route('kebayas.rent', $kebaya) }}" method="POST" class="space-y-4">
+                        <form action="{{ route('rentals.store', $kebaya) }}" method="POST" class="space-y-4">
                             @csrf
                             <div>
                                 <label for="TANGGAL_MULAI" class="block text-sm font-medium text-gray-700">Start Date</label>
@@ -63,4 +74,3 @@
     </div>
 </div>
 @endsection
-

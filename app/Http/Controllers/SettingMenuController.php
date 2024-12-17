@@ -21,7 +21,7 @@ class SettingMenuController extends Controller
     public function index()
     {
         $jenisUsers = JenisUser::where('ID_JENIS_USER', '!=', 1)->get();
-        return view('set.index', compact('jenisUsers'));
+        return view('setmenu.index', compact('jenisUsers'));
     }
 
     public function edit($id_jenis_user)
@@ -31,7 +31,7 @@ class SettingMenuController extends Controller
         $selectedMenus = SettingMenu::where('ID_JENIS_USER', $id_jenis_user)
                             ->pluck('MENU_ID')->toArray();
 
-        return view('set.edit', compact('jenisUser', 'menus', 'selectedMenus'));
+        return view('setmenu.edit', compact('jenisUser', 'menus', 'selectedMenus'));
     }
 
     public function update(Request $request, $id_jenis_user)
