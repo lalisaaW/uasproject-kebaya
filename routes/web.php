@@ -5,12 +5,22 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\authmiddleware;
 use App\Http\Middleware\succesmidlleware;
+use App\Http\Controllers\setmenuController;
 
 
 
 Route::middleware([succesmidlleware::class])->group(function () {
     Route::match(['get', 'post'], '/layouts', [AuthController::class, 'index'])->name('main');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::resource('setmenu', setmenuController::class);
+    Route::get('menu-settings', [setmenuController::class, 'showMenuSettings'])->name('setmenu.showMenuSettings');
+    Route::post('menu-settings/{role}', [setmenuController::class, 'updateMenuSettings'])->name('setmenu.updateMenuSettings');
+    Route::get('/setmenu', [SetMenuController::class, 'index'])->name('setmenu.index');
+    Route::post('/setmenu', [SetMenuController::class, 'store'])->name('setmenu.store');
+    Route::get('/setmenu/{menu}/edit', [SetMenuController::class, 'edit'])->name('setmenu.edit');
+    Route::put('/setmenu/{menu}', [SetMenuController::class, 'update'])->name('setmenu.update');
+    Route::delete('/setmenu/{menu}', [SetMenuController::class, 'destroy'])->name('setmenu.destroy');
+    Route::put('/setmenu/role/{role}', [SetMenuController::class, 'updateRoleMenuSettings'])->name('setmenu.updateRoleMenuSettings');
 });
 
 Route::middleware('guest')->group(function () {

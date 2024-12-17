@@ -1,5 +1,33 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
+        {{-- @foreach($sidebarMenus as $menu)
+            <li class="nav-item">
+                <a class="nav-link" href="{{ $menu->menu_link }}">
+                    <i class="{{ $menu->menu_icon }}"></i>
+                    <span class="menu-title">{{ $menu->menu_name }}</span>
+                    @if(!empty($menu->children))
+                        <i class="menu-arrow"></i>
+                    @endif
+                </a>
+                @if(!empty($menu->children))
+                    <div class="collapse">
+                        <ul class="nav flex-column sub-menu">
+                            @foreach($menu->children as $childMenu)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ $childMenu->menu_link }}">{{ $childMenu->menu_name }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </li>
+        @endforeach --}}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('setmenu.index') }}">
+                <i class="icon-grid menu-icon"></i>
+                <span class="menu-title">Setting Menu</span>
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="index.html">
                 <i class="icon-grid menu-icon"></i>
