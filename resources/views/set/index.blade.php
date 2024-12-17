@@ -1,67 +1,53 @@
-@extends('layouts.konten')
+@extends('layouts.main')
 
-@section('page-content')
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">Pengaturan Menu</h2>
+@section('content')
+<div class="container-fluid">
+    <h1 class="mt-4">Menu Settings</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{{ route('main') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Menu Settings</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            User Types
         </div>
         <div class="card-body">
-            <table id="myTable" class="table table-hover table-bordered">
-                <thead class="thead-dark">
+            @if(session('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <table id="userTypesTable" class="table table-striped table-bordered">
+                <thead>
                     <tr>
-                        <th scope="col">Jenis User</th>
-                        <th scope="col" class="text-center">Aksi</th>
+                        <th>User Type</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($jenisUsers as $jenisUser)
-                        <tr>
-                            <td>{{ $jenisUser->JENIS_USER }}</td>
-                            <td class="text-center">
-                                <a href="{{ route('menu_settings.edit', $jenisUser->ID_JENIS_USER) }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                            </td>
-                        </tr>
+                    @foreach($jenisUsers as $jenisUser)
+                    <tr>
+                        <td>{{ $jenisUser->JENIS_USER }}</td>
+                        <td>
+                            <a href="{{ route('menu_settings.edit', $jenisUser->ID_JENIS_USER) }}" class="btn btn-primary btn-sm">Edit Menus</a>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
-<style>
-    .card {
-        border-radius: 8px;
-    }
-
-    .table thead th {
-        background-color: #343a40;
-        color: #fff;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f5f5f5;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-sm {
-        padding: 5px 10px;
-        font-size: 0.9rem;
-    }
-
-    .fas.fa-edit {
-        margin-right: 5px;
-    }
-</style>
 @endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $('#userTypesTable').DataTable({
+            responsive: true
+        });
+    });
+</script>
+@endsection
+

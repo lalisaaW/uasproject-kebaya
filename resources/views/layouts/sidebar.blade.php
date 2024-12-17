@@ -1,221 +1,140 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
-        {{-- @foreach($sidebarMenus as $menu)
-            <li class="nav-item">
-                <a class="nav-link" href="{{ $menu->menu_link }}">
-                    <i class="{{ $menu->menu_icon }}"></i>
-                    <span class="menu-title">{{ $menu->menu_name }}</span>
-                    @if(!empty($menu->children))
-                        <i class="menu-arrow"></i>
-                    @endif
-                </a>
-                @if(!empty($menu->children))
-                    <div class="collapse">
-                        <ul class="nav flex-column sub-menu">
-                            @foreach($menu->children as $childMenu)
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ $childMenu->menu_link }}">{{ $childMenu->menu_name }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
+        <div class="sb-sidenav-menu">
+            <div class="nav">
+                @if(Auth::user()->ID_JENIS_USER == 1)
+                    <!-- Admin Menu -->
+                    <a class="nav-link" href="{{ route('main') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                    <a class="nav-link" href="{{ route('menu_settings.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
+                        <span class="menu-title">Menu Settings</span>
+                    </a>
+                    <a class="nav-link" href="{{ route('users.index') }}">
+                        <div class="sb-nav-link-icon"><i class="icon-grid menu-icon"></i></div>
+                        <span class="menu-title">User</span>
+                    </a>
+                    <a class="nav-link" href="{{ route('menus.index') }}">
+                        <div class="sb-nav-link-icon"><i class="icon-grid menu-icon"></i></div>
+                        <span class="menu-title">Menu</span>
+                    </a>
+                @else
+                    <!-- User Menu - Dynamic Menus -->
+                    <div id="approvedMenus">
+                        @foreach($menus as $menu)
+                            <a class="nav-link" href="{{ $menu->MENU_LINK }}">
+                                <div class="sb-nav-link-icon"><i class="{{ $menu->MENU_ICON }}"></i></div>
+                                {{ $menu->MENU_NAME }}
+                            </a>
+                        @endforeach
                     </div>
                 @endif
-            </li>
-        @endforeach --}}
-        <div class="position-sticky">
-            <ul class="nav flex-column" id="sidebarMenu">
-                <!-- Sidebar menu items will be dynamically inserted here -->
-            </ul>
+            </div>
         </div>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('setmenu.index') }}">
-                <i class="icon-grid menu-icon"></i>
-                <span class="menu-title">Setting Menu</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="index.html">
-                <i class="icon-grid menu-icon"></i>
-                <span class="menu-title">Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
-                aria-controls="ui-basic">
-                <i class="icon-layout menu-icon"></i>
-                <span class="menu-title">UI Elements</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link"
-                            href="pages/ui-features/buttons.html">Buttons</a></li>
-                    <li class="nav-item"> <a class="nav-link"
-                            href="pages/ui-features/dropdowns.html">Dropdowns</a></li>
-                    <li class="nav-item"> <a class="nav-link"
-                            href="pages/ui-features/typography.html">Typography</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false"
-                aria-controls="form-elements">
-                <i class="icon-columns menu-icon"></i>
-                <span class="menu-title">Form elements</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="form-elements">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">Basic
-                            Elements</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false"
-                aria-controls="charts">
-                <i class="icon-bar-graph menu-icon"></i>
-                <span class="menu-title">Charts</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="charts">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link"
-                            href="pages/charts/chartjs.html">ChartJs</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false"
-                aria-controls="tables">
-                <i class="icon-grid-2 menu-icon"></i>
-                <span class="menu-title">Tables</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="tables">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">Basic
-                            table</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false"
-                aria-controls="icons">
-                <i class="icon-contract menu-icon"></i>
-                <span class="menu-title">Icons</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="icons">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">Mdi icons</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false"
-                aria-controls="auth">
-                <i class="icon-head menu-icon"></i>
-                <span class="menu-title">User Pages</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="auth">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a>
-                    </li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html">
-                            Register </a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#error" aria-expanded="false"
-                aria-controls="error">
-                <i class="icon-ban menu-icon"></i>
-                <span class="menu-title">Error pages</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="error">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404
-                        </a></li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500
-                        </a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="../../../docs/documentation.html">
-                <i class="icon-paper menu-icon"></i>
-                <span class="menu-title">Documentation</span>
-            </a>
-        </li>
     </ul>
 </nav>
-@section('js')
-<script>
-$(document).ready(function() {
-    $.ajax({
-        url: "{{ route('setmenu.getApprovedMenus') }}",
-        type: 'GET',
-        success: function(menus) {
-            var sidebarHtml = '';
-            menus.forEach(function(menu) {
-                sidebarHtml += `<li class="nav-item">
-                    <a class="nav-link" href="${menu.menu_link}">
-                        <i class="${menu.menu_icon}"></i>
-                        ${menu.menu_name}
-                    </a>`;
-                if (menu.children && menu.children.length > 0) {
-                    sidebarHtml += '<ul class="nav flex-column ml-3">';
-                    menu.children.forEach(function(child) {
-                        sidebarHtml += `<li class="nav-item">
-                            <a class="nav-link" href="${child.menu_link}">
-                                <i class="${child.menu_icon}"></i>
-                                ${child.menu_name}
-                            </a>
-                        </li>`;
-                    });
-                    sidebarHtml += '</ul>';
-                }
-                sidebarHtml += '</li>';
-            });
-            $('#sidebarMenu').html(sidebarHtml);
-        },
-        error: function(xhr) {
-            console.error('Error loading menus:', xhr.responseText);
-        }
-    });
-});
 
-function updateSidebar(menus) {
-        var sidebarHtml = '';
-        menus.forEach(function(menu) {
-            sidebarHtml += `<li class="nav-item">
-                <a class="nav-link" href="${menu.menu_link}">
-                    <i class="${menu.menu_icon}"></i>
-                    ${menu.menu_name}
-                </a>`;
-            if (menu.children && menu.children.length > 0) {
-                sidebarHtml += '<ul class="nav flex-column ml-3">';
-                menu.children.forEach(function(child) {
-                    sidebarHtml += `<li class="nav-item">
-                        <a class="nav-link" href="${child.menu_link}">
-                            <i class="${child.menu_icon}"></i>
-                            ${child.menu_name}
-                        </a>
-                    </li>`;
-                });
-                sidebarHtml += '</ul>';
-            }
-            sidebarHtml += '</li>';
-        });
-        $('#sidebarMenu').html(sidebarHtml);
+@push('styles')
+<style>
+    /* Sidebar background and padding */
+    #sidebar {
+        background-color: #343a40;
+        color: #fff;
+        padding: 10px;
     }
-    
-    // Ekspos fungsi updateSidebar ke objek window agar bisa diakses dari luar
-    window.updateSidebar = updateSidebar;
-</script>
 
-@endsection
+    /* Styling for each menu item */
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        border-radius: 5px;
+    }
+
+    /* Icon and Text Styling */
+    .sb-nav-link-icon {
+        margin-right: 10px;
+    }
+
+    .menu-title {
+        font-weight: 500;
+    }
+
+    /* Hover effect */
+    .nav-link:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    /* Active link styling */
+    .nav-link.active {
+        background-color: #28a745;
+    }
+
+    /* Sidebar menu items when in user mode */
+    #approvedMenus .nav-link {
+        border-left: 3px solid transparent;
+    }
+
+    #approvedMenus .nav-link:hover {
+        background-color: #495057;
+        border-left-color: #007bff;
+    }
+
+    /* Responsiveness - collapsing sidebar for mobile */
+    @media (max-width: 768px) {
+        #sidebar {
+            width: 80px;
+        }
+
+        .nav-link {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .sb-nav-link-icon {
+            margin-right: 0;
+        }
+
+        .menu-title {
+            display: none;
+        }
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        @if(Auth::user()->ID_JENIS_USER != 1)
+            // Make AJAX request to fetch approved menus for non-admin users
+            $.ajax({
+                url: '{{ route("menu_settings.approved_menus") }}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    let menuHtml = '';
+                    data.forEach(function(menu) {
+                        menuHtml += `
+                            <a class="nav-link" href="${menu.MENU_LINK}">
+                                <div class="sb-nav-link-icon"><i class="${menu.MENU_ICON}"></i></div>
+                                <span class="menu-title">${menu.MENU_NAME}</span>
+                            </a>
+                        `;
+                    });
+                    $('#approvedMenus').html(menuHtml);  // Insert dynamic menu items
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading approved menus:", error);
+                }
+            });
+        @endif
+    });
+</script>
+@endpush

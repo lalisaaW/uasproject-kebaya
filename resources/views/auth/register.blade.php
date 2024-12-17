@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Register</title>
@@ -27,74 +26,54 @@
                                 <img src="{{ asset('assets/images/logo.svg') }}" alt="logo">
                             </div>
 
-                            <h4>Login & Register</h4>
+                            <h4>Register</h4>
 
-                            <form action="{{ route('register') }}" method="POST" class="mt-4">
+                            <form method="POST" action="{{ route('register') }}" class="p-4 border rounded shadow-sm">
                                 @csrf
-                                <h4>Register Form</h4>
-                            
-                                <!-- Dropdown untuk memilih role -->
-                                <div class="form-group">
-                                    <select class="form-control form-control-lg" name="role_id" required>
-                                        <option value="" disabled selected>Select Role</option>
-                                        <option value="2">Penjual</option>
-                                        <option value="3">Pembeli</option>
+                                <div class="form-group mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" id="name" name="name" class="form-control" required maxlength="60" value="{{ old('name') }}">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" id="username" name="username" class="form-control" required maxlength="60" value="{{ old('username') }}">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" id="email" name="email" class="form-control" required maxlength="60" value="{{ old('email') }}">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" id="password" name="password" class="form-control" required minlength="8">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="password_confirmation" class="form-label">Confirm Password</label>
+                                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required minlength="8">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="wa" class="form-label">WhatsApp Number</label>
+                                    <input type="text" id="wa" name="wa" class="form-control" required maxlength="15" value="{{ old('wa') }}">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="ID_JENIS_USER" class="form-label">User Type</label>
+                                    <select id="ID_JENIS_USER" name="ID_JENIS_USER" class="form-control" required>
+                                        <option value="" disabled selected>Select User Type</option>
+                                        @foreach($jenisUsers as $jenisUser)
+                                            <option value="{{ $jenisUser->ID_JENIS_USER }}" {{ old('ID_JENIS_USER') == $jenisUser->ID_JENIS_USER ? 'selected' : '' }}>
+                                                {{ $jenisUser->JENIS_USER }}
+                                            </option>
+                                        @endforeach
                                     </select>
-                                    @error('role_id')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
                                 </div>
-                            
-                                <!-- Input nama -->
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" name="nama" placeholder="Name" autocomplete="off" required>
-                                    @error('nama')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            
-                                <!-- Input email -->
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-lg" name="email" placeholder="Email" autocomplete="off" required>
-                                    @error('email')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            
-                                <!-- Input nomor HP -->
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-lg" name="no_hp" placeholder="Phone Number" pattern="[0-9]{10,15}" autocomplete="off" required>
-                                    @error('no_hp')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            
-                                <!-- Input password -->
-                                <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg" name="password" placeholder="Password" autocomplete="off" required>
-                                    @error('password')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                            
-                                <!-- Input konfirmasi password -->
-                                <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg" name="password_confirmation" placeholder="Confirm Password" autocomplete="off" required>
-                                </div>
-                            
-                                <!-- Tombol register -->
-                                <div class="mt-3 d-grid gap-2">
-                                    <button type="submit" class="btn btn-block btn-secondary btn-lg font-weight-medium auth-form-btn">
-                                        REGISTER
-                                    </button>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Register</button>
                                 </div>
                             </form>
                             
-
+                            
                             <div class="text-center mt-4 font-weight-light">
-                                Sudah punya akun? <a href="/login" class="text-primary">login</a>
+                                Already have an account? <a href="{{ route('login') }}" class="text-primary">Login</a>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -110,3 +89,4 @@
 </body>
 
 </html>
+

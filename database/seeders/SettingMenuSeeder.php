@@ -9,17 +9,17 @@ class SettingMenuSeeder extends Seeder
 {
     public function run()
     {
-        // Ambil role_id untuk Admin
-        $roleAdmin = DB::table('roles')->where('nama_role', 'Admin')->first();
+        // Ambil ID_JENIS_USER untuk Admin
+        $jenisUserAdmin = DB::table('jenis_users')->where('JENIS_USER', 'Admin')->first();
         
-        // Pastikan role_id ditemukan
-        if (!$roleAdmin) {
-            $this->command->error('Role "Admin" tidak ditemukan di tabel roles.');
+        // Pastikan ID_JENIS_USER ditemukan
+        if (!$jenisUserAdmin) {
+            $this->command->error('Jenis user "Admin" tidak ditemukan di tabel jenis_users.');
             return;
         }
 
         // Ambil MENU_ID yang valid dari tabel menus
-        $menuId = DB::table('menus')->where('menu_name', 'Absen')->value('menu_id');
+        $menuId = DB::table('menus')->where('MENU_NAME', 'Absen')->value('MENU_ID');
 
         // Pastikan MENU_ID ditemukan
         if (!$menuId) {
@@ -30,11 +30,11 @@ class SettingMenuSeeder extends Seeder
         // Insert data ke tabel setting_menus
         DB::table('setting_menus')->insert([
             [
-                'role_id' => $roleAdmin->role_id,  // Ambil role_id untuk Admin
-                'menu_id' => $menuId,
-                'create_by' => 'Atmin',
-                'create_date' => now(),
-                'delete_mark' => 'N',
+                'ID_JENIS_USER' => $jenisUserAdmin->ID_JENIS_USER, // Ambil ID_JENIS_USER di sini
+                'MENU_ID' => $menuId,
+                'CREATE_BY' => 'Atmin',
+                'CREATE_DATE' => now(),
+                'DELETE_MARK' => 'N',
             ],
         ]);
 

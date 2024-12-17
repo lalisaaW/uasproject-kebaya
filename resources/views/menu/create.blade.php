@@ -1,41 +1,40 @@
 @extends('layouts.main')
 
-@section('page-content')
+@section('content')
 <div class="container">
-    <h1>Create menu</h1>
-    @if ($errors->any())
+    <h1>Tambah Menu Baru</h1>
+
+    @if(session('error'))
         <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+            {{ session('error') }}
         </div>
     @endif
+
     <form action="{{ route('menus.store') }}" method="POST">
         @csrf
-
         <div class="form-group">
-            <label for="menu_name">menu name:</label>
-            <input type="text" name="menu_name" class="form-control" required>
+            <label for="MENU_NAME">Nama Menu</label>
+            <input type="text" class="form-control @error('MENU_NAME') is-invalid @enderror" id="MENU_NAME" name="MENU_NAME" value="{{ old('MENU_NAME') }}" required>
+            @error('MENU_NAME')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
-    
         <div class="form-group">
-            <label for="menu_link">menu link:</label>
-            <input type="text" name="menu_link" class="form-control" required>
+            <label for="MENU_LINK">Link Menu</label>
+            <input type="text" class="form-control @error('MENU_LINK') is-invalid @enderror" id="MENU_LINK" name="MENU_LINK" value="{{ old('MENU_LINK') }}" required>
+            @error('MENU_LINK')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
-        
         <div class="form-group">
-            <label for="menu_icon">menu icon:</label>
-            <input type="text" name="menu_icon" class="form-control">
+            <label for="MENU_ICON">Icon Menu</label>
+            <input type="text" class="form-control @error('MENU_ICON') is-invalid @enderror" id="MENU_ICON" name="MENU_ICON" value="{{ old('MENU_ICON') }}">
+            @error('MENU_ICON')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
-        
-        <div class="form-group">
-            <label for="create_by">Created By:</label>
-            <input type="text" name="create_by" class="form-control" value="{{ Auth::user()->name }}" readonly>
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Create menu</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{{ route('menus.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
 @endsection
