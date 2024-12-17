@@ -22,6 +22,11 @@
                 @endif
             </li>
         @endforeach --}}
+        <div class="position-sticky">
+            <ul class="nav flex-column" id="sidebarMenu">
+                <!-- Sidebar menu items will be dynamically inserted here -->
+            </ul>
+        </div>
         <li class="nav-item">
             <a class="nav-link" href="{{ route('setmenu.index') }}">
                 <i class="icon-grid menu-icon"></i>
@@ -148,3 +153,69 @@
         </li>
     </ul>
 </nav>
+@section('js')
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "{{ route('setmenu.getApprovedMenus') }}",
+        type: 'GET',
+        success: function(menus) {
+            var sidebarHtml = '';
+            menus.forEach(function(menu) {
+                sidebarHtml += `<li class="nav-item">
+                    <a class="nav-link" href="${menu.menu_link}">
+                        <i class="${menu.menu_icon}"></i>
+                        ${menu.menu_name}
+                    </a>`;
+                if (menu.children && menu.children.length > 0) {
+                    sidebarHtml += '<ul class="nav flex-column ml-3">';
+                    menu.children.forEach(function(child) {
+                        sidebarHtml += `<li class="nav-item">
+                            <a class="nav-link" href="${child.menu_link}">
+                                <i class="${child.menu_icon}"></i>
+                                ${child.menu_name}
+                            </a>
+                        </li>`;
+                    });
+                    sidebarHtml += '</ul>';
+                }
+                sidebarHtml += '</li>';
+            });
+            $('#sidebarMenu').html(sidebarHtml);
+        },
+        error: function(xhr) {
+            console.error('Error loading menus:', xhr.responseText);
+        }
+    });
+});
+
+function updateSidebar(menus) {
+        var sidebarHtml = '';
+        menus.forEach(function(menu) {
+            sidebarHtml += `<li class="nav-item">
+                <a class="nav-link" href="${menu.menu_link}">
+                    <i class="${menu.menu_icon}"></i>
+                    ${menu.menu_name}
+                </a>`;
+            if (menu.children && menu.children.length > 0) {
+                sidebarHtml += '<ul class="nav flex-column ml-3">';
+                menu.children.forEach(function(child) {
+                    sidebarHtml += `<li class="nav-item">
+                        <a class="nav-link" href="${child.menu_link}">
+                            <i class="${child.menu_icon}"></i>
+                            ${child.menu_name}
+                        </a>
+                    </li>`;
+                });
+                sidebarHtml += '</ul>';
+            }
+            sidebarHtml += '</li>';
+        });
+        $('#sidebarMenu').html(sidebarHtml);
+    }
+    
+    // Ekspos fungsi updateSidebar ke objek window agar bisa diakses dari luar
+    window.updateSidebar = updateSidebar;
+</script>
+
+@endsection

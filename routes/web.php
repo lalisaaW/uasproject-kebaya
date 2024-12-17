@@ -21,6 +21,9 @@ Route::middleware([succesmidlleware::class])->group(function () {
     Route::put('/setmenu/{menu}', [SetMenuController::class, 'update'])->name('setmenu.update');
     Route::delete('/setmenu/{menu}', [SetMenuController::class, 'destroy'])->name('setmenu.destroy');
     Route::put('/setmenu/role/{role}', [SetMenuController::class, 'updateRoleMenuSettings'])->name('setmenu.updateRoleMenuSettings');
+    Route::post('/setmenu/{id}/toggle-approval', [SetMenuController::class, 'toggleApproval'])->name('setmenu.toggleApproval');
+    Route::get('/approved-menus', [SetMenuController::class, 'getApprovedMenus'])->name('setmenu.getApprovedMenus');
+    
 });
 
 Route::middleware('guest')->group(function () {

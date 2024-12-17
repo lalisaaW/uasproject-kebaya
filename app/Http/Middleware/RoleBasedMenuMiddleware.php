@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Models\Menu;
+use App\Http\Controllers\SetMenuController;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleBasedMenuMiddleware
@@ -14,40 +16,28 @@ class RoleBasedMenuMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+    // public function handle(Request $request, Closure $next)
     public function handle(Request $request, Closure $next)
     {
         if (auth()->check()) {
-            $user = auth()->users();
+            $user = auth()->user();
             $role = $user->role;
 
-            // Get all menus approved for the user's role
-            $approvedMenuIds = $role->setting_menus()->pluck('menu_id')->toArray();
-            $approvedMenus = Menu::whereIn('menu_id', $approvedMenuIds)->get();
+            if ($role) {
+                $setMenuController = new SetMenuController();
+                $approvedMenus = $setMenuController->getApprovedMenus()->original;
 
-            // Structure the menus hierarchically
-            $menuTree = $this->buildMenuTree($approvedMenus);
+                $roleMenus = $approvedMenus->filter(function ($menu) use ($role) {
+                    return $menu->setting_menus->contains('role_id', $role->role_id);
+                });
 
-            // Share the menu tree with all views
-            view()->share('sidebarMenus', $menuTree);
-        }
-
-        return $next($request);
-    }
-
-    private function buildMenuTree($menus, $parentId = null)
-    {
-        $tree = [];
-
-        foreach ($menus as $menu) {
-            if ($menu->parent_id == $parentId) {
-                $children = $this->buildMenuTree($menus, $menu->menu_id);
-                if ($children) {
-                    $menu->children = $children;
-                }
-                $tree[] = $menu;
+                Log::info('Sharing menus with view', ['menus' => $roleMenus]);
+                view()->share('sidebarMenus', $roleMenus);
+            } else {
+                Log::warning('User does not have a role', ['user_id' => $user->id]);
+                return redirect()->route('login')->with('error', 'You do not have a valid role.');
             }
         }
-
-        return $tree;
+        return $next($request);
     }
 }
