@@ -5,7 +5,7 @@
     <!-- Meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Skydash Admin</title>
+    <title>Ratu Kebaya</title>
 
     <!-- Vendor CSS -->
     <link rel="stylesheet" href="{{ asset('assets/vendors/feather/feather.css') }}">
